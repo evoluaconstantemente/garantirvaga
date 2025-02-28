@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garantia de Vaga - Tratamento Capilar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5e6ff, #dda0dd);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #6a1b9a;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a4a4a;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .plano-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .plano-option {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .plano-option:hover {
+            border-color: #6a1b9a;
+        }
+
+        .plano-option.selected {
+            border-color: #6a1b9a;
+            background: #f8f1ff;
+        }
+
+        .checkbox-group {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #ffe082;
+            margin: 25px 0;
+        }
+
+        #compromisso-texto {
+            color: #6a1b9a;
+            font-weight: bold;
+        }
+
+        .required-alert {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        button {
+            background: #6a1b9a;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #4a148c;
+        }
+
+        #success-message {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background: #f8f1ff;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .whatsapp-button {
+            background: #25d366;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .whatsapp-button:hover {
+            background: #128c7e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Garantia de Vaga para Tratamento Capilar</h1>
+        
+        <form id="cadastroForm">
+            <div class="form-group">
+                <label for="nome">Nome Completo:</label>
+                <input type="text" id="nome" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telefone">Número de WhatsApp:</label>
+                <input type="tel" id="telefone" pattern="[0-9]{11}" placeholder="Ex: 11987654321" required>
+            </div>
+
+            <div class="form-group">
+                <label>Plano Escolhido:</label>
+                <div class="plano-options">
+                    <div class="plano-option" onclick="selectPlano(3)">3 Meses</div>
+                    <div class="plano-option" onclick="selectPlano(5)">5 Meses</div>
+                </div>
+                <input type="hidden" id="plano" required>
+            </div>
+
+            <div class="checkbox-group">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="checkbox" id="compromisso" required>
+                    <label for="compromisso">
+                        <span id="compromisso-texto">Declaro que assumo o compromisso com o tratamento de 
+                        <span id="plano-selecionado-texto" style="color: #d81b60;">______ meses</span></span>
+                    </label>
+                </div>
+                <div class="required-alert" id="alerta-compromisso">
+                    Por favor, marque esta opção para garantir sua vaga!
+                </div>
+            </div>
+
+            <button type="submit">Garantir Minha Vaga</button>
+        </form>
+
+        <div id="success-message">
+            <h2>✅ Cadastro Confirmado!</h2>
+            <p>Sua vaga no plano de <strong id="plano-confirmado"></strong> meses está garantida!</p>
+            <button class="whatsapp-button" onclick="openWhatsApp()">
+                Falar com Jean pelo WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function selectPlano(meses) {
+            document.querySelectorAll('.plano-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            document.getElementById('plano').value = meses;
+            document.getElementById('plano-selecionado-texto').textContent = `${meses} meses`;
+        }
+
+        document.getElementById('cadastroForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const planoSelecionado = document.getElementById('plano').value;
+            const compromisso = document.getElementById('compromisso');
+
+            if(!compromisso.checked) {
+                document.getElementById('alerta-compromisso').style.display = 'block';
+                compromisso.parentElement.parentElement.style.borderColor = '#d32f2f';
+                return;
+            }
+
+            if(planoSelecionado) {
+                document.getElementById('cadastroForm').style.display = 'none';
+                document.getElementById('success-message').style.display = 'block';
+                document.getElementById('plano-confirmado').textContent = planoSelecionado;
+            }
+        });
+
+        document.getElementById('compromisso').addEventListener('change', function() {
+            if(this.checked) {
+                document.getElementById('alerta-compromisso').style.display = 'none';
+                this.parentElement.parentElement.style.borderColor = '#ffe082';
+            }
+        });
+
+        function openWhatsApp() {
+            const nome = document.getElementById('nome').value;
+            const plano = document.getElementById('plano').value;
+            
+            const message = `Olá Jean, sou ${nome}!\nAcabei de garantir minha vaga no plano de ${plano} meses!`;
+            const whatsappUrl = `https://wa.me/553175105402?text=${encodeURIComponent(message)}`;
+            
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
