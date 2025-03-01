@@ -65,7 +65,7 @@
         .plano-option {
             flex: 1;
             text-align: center;
-            padding: 15px;
+            padding: 20px 15px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             cursor: pointer;
@@ -81,24 +81,72 @@
             background: #f8f1ff;
         }
 
+        .plano-details {
+            font-size: 14px;
+            margin-top: 5px;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
         .checkbox-group {
             background: #fff8e1;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 20px;
+            border-radius: 10px;
             border: 2px solid #ffe082;
             margin: 25px 0;
         }
 
-        #compromisso-texto {
-            color: #6a1b9a;
-            font-weight: bold;
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+        }
+
+        #compromisso {
+            display: none;
+        }
+
+        .checkmark {
+            width: 30px;
+            height: 30px;
+            border: 2px solid #6a1b9a;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        #compromisso:checked + .checkmark {
+            background: #6a1b9a;
+            border-color: #6a1b9a;
+        }
+
+        #compromisso:checked + .checkmark::after {
+            content: "✓";
+            color: white;
+            font-size: 20px;
+        }
+
+        .checkbox-text {
+            font-size: 16px;
+            line-height: 1.4;
         }
 
         .required-alert {
             color: #d32f2f;
             font-size: 14px;
-            margin-top: 5px;
+            margin-top: 10px;
             display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-icon {
+            width: 20px;
+            height: 20px;
         }
 
         button {
@@ -133,6 +181,7 @@
             justify-content: center;
             gap: 10px;
             margin-top: 20px;
+            padding: 15px;
         }
 
         .whatsapp-button:hover {
@@ -158,22 +207,35 @@
             <div class="form-group">
                 <label>Plano Escolhido:</label>
                 <div class="plano-options">
-                    <div class="plano-option" onclick="selectPlano(3)">3 Meses</div>
-                    <div class="plano-option" onclick="selectPlano(5)">5 Meses</div>
+                    <div class="plano-option" onclick="selectPlano(3)">
+                        <div>3 Meses</div>
+                        <div class="plano-details">7 vagas disponíveis<br>por apenas R$ 297,00</div>
+                    </div>
+                    <div class="plano-option" onclick="selectPlano(5)">
+                        <div>5 Meses</div>
+                        <div class="plano-details">5 vagas disponíveis<br>por apenas R$ 397,00</div>
+                    </div>
                 </div>
                 <input type="hidden" id="plano" required>
             </div>
 
             <div class="checkbox-group">
-                <div style="display: flex; gap: 10px; align-items: center;">
+                <label class="custom-checkbox" for="compromisso">
                     <input type="checkbox" id="compromisso" required>
-                    <label for="compromisso">
-                        <span id="compromisso-texto">Declaro que assumo o compromisso com o tratamento de 
-                        <span id="plano-selecionado-texto" style="color: #d81b60;">______ meses</span></span>
-                    </label>
-                </div>
+                    <span class="checkmark"></span>
+                    <span class="checkbox-text">
+                        Confirmo meu compromisso completo com o tratamento de
+                        <span id="plano-selecionado-texto" style="color: #d81b60; font-weight: bold;">
+                            ______ meses
+                        </span>
+                        e estou ciente das condições
+                    </span>
+                </label>
                 <div class="required-alert" id="alerta-compromisso">
-                    Por favor, marque esta opção para garantir sua vaga!
+                    <svg class="alert-icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                    </svg>
+                    Por favor, marque esta opção para confirmar sua vaga!
                 </div>
             </div>
 
@@ -206,8 +268,8 @@
             const compromisso = document.getElementById('compromisso');
 
             if(!compromisso.checked) {
-                document.getElementById('alerta-compromisso').style.display = 'block';
-                compromisso.parentElement.parentElement.style.borderColor = '#d32f2f';
+                document.getElementById('alerta-compromisso').style.display = 'flex';
+                document.querySelector('.checkbox-group').style.borderColor = '#d32f2f';
                 return;
             }
 
@@ -221,7 +283,7 @@
         document.getElementById('compromisso').addEventListener('change', function() {
             if(this.checked) {
                 document.getElementById('alerta-compromisso').style.display = 'none';
-                this.parentElement.parentElement.style.borderColor = '#ffe082';
+                document.querySelector('.checkbox-group').style.borderColor = '#ffe082';
             }
         });
 
